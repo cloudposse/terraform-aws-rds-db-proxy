@@ -1,0 +1,80 @@
+name: terraform-aws-rds-db-proxy
+
+tags:
+  - aws
+  - terraform
+  - terraform-modules
+  - databases
+  - rds
+  - rds-database
+  - proxy
+  - proxy-pool
+  - database-proxy
+  - connection
+  - connections
+  - pool
+  - connection-pool
+  - aurora
+  - mysql
+  - postgres
+  - cluster
+
+categories:
+  - terraform-modules/databases
+
+license: APACHE2
+
+github_repo: cloudposse/terraform-aws-rds-db-proxy
+
+badges:
+  - name: Latest Release
+    image: https://img.shields.io/github/release/cloudposse/terraform-aws-rds-db-proxy.svg
+    url: https://github.com/cloudposse/terraform-aws-rds-db-proxy/releases/latest
+  - name: Slack Community
+    image: https://slack.cloudposse.com/badge.svg
+    url: https://slack.cloudposse.com
+
+related:
+  - name: terraform-aws-rds-cluster
+    description: Terraform module to provision an RDS Aurora cluster for MySQL or Postgres.
+    url: https://github.com/cloudposse/terraform-aws-rds-cluster
+  - name: terraform-aws-rds
+    description: Terraform module to provision AWS RDS instances.
+    url: https://github.com/cloudposse/terraform-aws-rds
+  - name: terraform-aws-rds-cloudwatch-sns-alarms
+    description: Terraform module that configures important RDS alerts using CloudWatch and sends them to an SNS topic.
+    url: https://github.com/cloudposse/terraform-aws-rds-cloudwatch-sns-alarms
+  - name: terraform-aws-rds-replica
+    description: Terraform module to provision AWS RDS replica instances. These are best suited for reporting purposes.
+    url: https://github.com/cloudposse/terraform-aws-rds-replica
+  - name: terraform-aws-backup
+    description: Terraform module to provision AWS Backup, a fully managed backup service that makes it easy to centralize and automate
+        the back up of data across AWS services such as Amazon EBS volumes, Amazon EC2 instances, Amazon RDS databases,
+        Amazon DynamoDB tables, Amazon EFS file systems, and AWS Storage Gateway volumes.
+    url: https://github.com/cloudposse/terraform-aws-backup
+
+description: |-
+  Terraform module to provision an Amazon [RDS Proxy](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.html) for MySQL or Postgres.
+
+usage: |2-
+
+  For a complete example, see [examples/complete](examples/complete).
+
+  For automated tests of the complete example using [bats](https://github.com/bats-core/bats-core) and [Terratest](https://github.com/gruntwork-io/terratest)
+  (which tests and deploys the example on AWS), see [test](test).
+
+  ```hcl
+  ```
+
+examples: |-
+  Review the [complete example](examples/complete) to see how to use this module.
+
+include:
+  - docs/targets.md
+  - docs/terraform.md
+
+contributors:
+  - name: Erik Osterman
+    github: osterman
+  - name: Andriy Knysh
+    github: aknysh

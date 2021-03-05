@@ -1,0 +1,81 @@
+provider "aws" {
+  region = var.region
+}
+
+module "vpc" {
+  source  = "cloudposse/vpc/aws"
+  version = "0.21.1"
+
+  cidr_block = "172.16.0.0/16"
+
+  context = module.this.context
+}
+
+module "subnets" {
+  source  = "cloudposse/dynamic-subnets/aws"
+  version = "0.38.0"
+
+  availability_zones   = var.availability_zones
+  vpc_id               = module.vpc.vpc_id
+  igw_id               = module.vpc.igw_id
+  cidr_block           = module.vpc.vpc_cidr_block
+  nat_gateway_enabled  = false
+  nat_instance_enabled = false
+
+  context = module.this.context
+}
+
+resource "random_password" "admin_password" {
+  count  = var.database_password == "" || var.database_password == null ? 1 : 0
+  length = 33
+  # Leave special characters out to avoid quoting and other issues.
+  # Special characters have no additional security compared to increasing length.
+  special          = false
+  override_special = "!#$%^&*()<>-_"
+}
+
+locals {
+  database_password = var.database_password != "" && var.database_password != null ? var.database_password : join("", random_password.admin_password.*.result)
+
+  username_password = {
+    username = var.database_user
+    password = local.database_password
+  }
+}
+
+module "rds_instance" {
+  source  = "cloudposse/rds/aws"
+  version = "0.34.0"
+
+  database_name       = var.database_name
+  database_user       = var.database_user
+  database_password   = local.database_password
+  database_port       = var.database_port
+  multi_az            = var.multi_az
+  storage_type        = var.storage_type
+  allocated_storage   = var.allocated_storage
+  storage_encrypted   = var.storage_encrypted
+  engine              = var.engine
+  engine_version      = var.engine_version
+  instance_class      = var.instance_class
+  db_parameter_group  = var.db_parameter_group
+  publicly_accessible = var.publicly_accessible
+  vpc_id              = module.vpc.vpc_id
+  subnet_ids          = module.subnets.private_subnet_ids
+  security_group_ids  = [module.vpc.vpc_default_security_group_id]
+  apply_immediately   = var.apply_immediately
+
+  context = module.this.context
+}
+
+resource "aws_secretsmanager_secret" "rds_username_and_password" {
+  name                    = module.this.id
+  description             = "RDS username and password"
+  recovery_window_in_days = 0
+  tags                    = module.this.tags
+}
+
+resource "aws_secretsmanager_secret_version" "rds_username_and_password" {
+  secret_id     = aws_secretsmanager_secret.rds_username_and_password.id
+  secret_string = jsonencode(local.username_password)
+}
