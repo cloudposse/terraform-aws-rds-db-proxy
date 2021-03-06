@@ -26,10 +26,10 @@ resource "aws_security_group_rule" "egress" {
 }
 
 resource "aws_security_group_rule" "ingress" {
-  description       = "Allow all ingress traffic"
+  description       = "Allow ingress traffic"
   type              = "ingress"
-  from_port         = 0
-  to_port           = 0
+  from_port         = var.database_port
+  to_port           = var.database_port
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
   ipv6_cidr_blocks  = ["::/0"]
