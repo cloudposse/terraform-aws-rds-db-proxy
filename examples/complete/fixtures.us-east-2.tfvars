@@ -44,3 +44,5 @@ db_parameter_group = "postgres11"
 
 # https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html
 instance_class = "db.t2.small"
+
+engine_family = "POSTGRESQL"
