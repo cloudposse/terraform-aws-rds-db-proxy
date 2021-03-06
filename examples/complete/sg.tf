@@ -1,9 +1,17 @@
+module "sg_label" {
+  source  = "cloudposse/label/null"
+  version = "0.24.1"
+
+  attributes = ["all", "traffic"]
+  context    = module.this.context
+}
+
 resource "aws_security_group" "this" {
-  name                   = module.this.id
+  name                   = module.sg_label.id
   description            = "RDS Proxy Security Group"
   revoke_rules_on_delete = true
   vpc_id                 = module.vpc.vpc_id
-  tags                   = module.this.tags
+  tags                   = module.sg_label.tags
 }
 
 resource "aws_security_group_rule" "egress" {
