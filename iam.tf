@@ -4,6 +4,7 @@ locals {
   iam_role_enabled = var.existing_iam_role_arn == null || var.existing_iam_role_arn == "" ? true : false
   asm_secret_arns  = compact([for auth in var.auth : lookup(auth, "secret_arn", "")])
   kms_key_id       = data.aws_kms_key.this.id
+  iam_role_arn     = local.iam_role_enabled ? join("", aws_iam_role.this.*.arn) : var.existing_iam_role_arn
 }
 
 data "aws_region" "this" {}
@@ -83,5 +84,5 @@ resource "aws_iam_role" "this" {
 resource "aws_iam_role_policy_attachment" "this" {
   count      = local.iam_role_enabled ? 1 : 0
   policy_arn = join("", aws_iam_policy.this.*.arn)
-  role       = aws_iam_role.this.name
+  role       = join("", aws_iam_role.this.*.name)
 }

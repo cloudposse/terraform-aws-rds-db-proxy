@@ -4,11 +4,22 @@ resource "aws_db_proxy" "this" {
   engine_family          = var.engine_family
   idle_client_timeout    = var.idle_client_timeout
   require_tls            = var.require_tls
-  role_arn               = aws_iam_role.this.arn
+  role_arn               = local.iam_role_arn
   vpc_security_group_ids = var.vpc_security_group_ids
   vpc_subnet_ids         = var.vpc_subnet_ids
-  auth                   = var.auth
-  tags                   = module.this.tags
+
+  dynamic "auth" {
+    for_each = var.auth
+
+    content {
+      auth_scheme = auth.value.auth_scheme
+      description = auth.value.description
+      iam_auth    = auth.value.iam_auth
+      secret_arn  = auth.value.secret_arn
+    }
+  }
+
+  tags = module.this.tags
 }
 
 resource "aws_db_proxy_default_target_group" "this" {
