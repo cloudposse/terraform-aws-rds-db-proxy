@@ -95,3 +95,9 @@ variable "existing_iam_role_arn" {
   default     = null
   description = "The ARN of an existing IAM role that the proxy can use to access secrets in AWS Secrets Manager. If not provided, the module will create a role to access secrets in Secrets Manager"
 }
+
+variable "kms_key_id" {
+  type        = string
+  default     = null
+  description = "The ARN or Id of the AWS KMS customer master key (CMK) to encrypt the secret values in the versions stored in secrets. If you don't specify this value, then Secrets Manager defaults to using the AWS account's default CMK (the one named `aws/secretsmanager`)"
+}
