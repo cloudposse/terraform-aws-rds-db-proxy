@@ -4,7 +4,7 @@ resource "aws_db_proxy" "this" {
   engine_family          = var.engine_family
   idle_client_timeout    = var.idle_client_timeout
   require_tls            = var.require_tls
-  role_arn               = var.role_arn
+  role_arn               = aws_iam_role.this.arn
   vpc_security_group_ids = var.vpc_security_group_ids
   vpc_subnet_ids         = var.vpc_subnet_ids
   auth                   = var.auth

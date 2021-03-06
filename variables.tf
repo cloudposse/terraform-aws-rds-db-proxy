@@ -22,11 +22,6 @@ variable "require_tls" {
   description = "A Boolean parameter that specifies whether Transport Layer Security (TLS) encryption is required for connections to the proxy. By enabling this setting, you can enforce encrypted TLS connections to the proxy"
 }
 
-variable "role_arn" {
-  type        = string
-  description = "he Amazon Resource Name (ARN) of the IAM role that the proxy uses to access secrets in AWS Secrets Manager"
-}
-
 variable "vpc_security_group_ids" {
   type        = set(string)
   description = "One or more VPC security group IDs to associate with the proxy"
@@ -87,4 +82,10 @@ variable "session_pinning_filters" {
   type        = list(string)
   default     = null
   description = "Each item in the list represents a class of SQL operations that normally cause all later statements in a session using a proxy to be pinned to the same underlying database connection"
+}
+
+variable "iam_role_attributes" {
+  type        = list(string)
+  default     = null
+  description = "Additional attributes to add to the ID of the IAM role that the proxy uses to access secrets in AWS Secrets Manager"
 }

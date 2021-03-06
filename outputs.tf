@@ -57,3 +57,8 @@ output "proxy_default_target_group_name" {
   value       = aws_db_proxy_default_target_group.this.name
   description = "The name of the default target group"
 }
+
+output "proxy_iam_role_arn" {
+  value       = aws_iam_role.this.arn
+  description = "The ARN of the IAM role that the proxy uses to access secrets in AWS Secrets Manager"
+}

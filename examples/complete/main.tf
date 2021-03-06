@@ -41,6 +41,15 @@ locals {
     username = var.database_user
     password = local.database_password
   }
+
+  auth = [
+    {
+      auth_scheme = "SECRETS"
+      description = "Access the database instance using username and password from Amazon Secrets Manager"
+      iam_auth    = "DISABLED"
+      secret_arn  = aws_secretsmanager_secret.rds_username_and_password.arn
+    }
+  ]
 }
 
 module "rds_instance" {
@@ -78,4 +87,25 @@ resource "aws_secretsmanager_secret" "rds_username_and_password" {
 resource "aws_secretsmanager_secret_version" "rds_username_and_password" {
   secret_id     = aws_secretsmanager_secret.rds_username_and_password.id
   secret_string = jsonencode(local.username_password)
+}
+
+module "rds_proxy" {
+  source = "../../"
+
+  db_instance_identifier = module.rds_instance.instance_id
+  auth                   = local.auth
+  vpc_security_group_ids = [module.vpc.vpc_default_security_group_id]
+  vpc_subnet_ids         = module.subnets.public_subnet_ids
+
+  debug_logging                = var.debug_logging
+  engine_family                = var.engine_family
+  idle_client_timeout          = var.idle_client_timeout
+  require_tls                  = var.require_tls
+  connection_borrow_timeout    = var.connection_borrow_timeout
+  init_query                   = var.init_query
+  max_connections_percent      = var.max_connections_percent
+  max_idle_connections_percent = var.max_idle_connections_percent
+  session_pinning_filters      = var.session_pinning_filters
+
+  context = module.this.context
 }
