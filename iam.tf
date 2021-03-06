@@ -3,15 +3,18 @@
 locals {
   iam_role_enabled = var.existing_iam_role_arn == null || var.existing_iam_role_arn == "" ? true : false
   asm_secret_arns  = compact([for auth in var.auth : lookup(auth, "secret_arn", "")])
-  kms_key_id       = data.aws_kms_key.this.id
+  kms_key_arn      = join("", data.aws_kms_key.this.*.arn)
   iam_role_arn     = local.iam_role_enabled ? join("", aws_iam_role.this.*.arn) : var.existing_iam_role_arn
 }
 
-data "aws_region" "this" {}
+data "aws_region" "this" {
+  count = local.iam_role_enabled ? 1 : 0
+}
 
 # Get information about the KMS Key used to encrypt secrets in AWS Secrets Manager
 # If `kms_key_id` is not provided, use the AWS account's default CMK (the one named `aws/secretsmanager`)
 data "aws_kms_key" "this" {
+  count  = local.iam_role_enabled ? 1 : 0
   key_id = var.kms_key_id != null && var.kms_key_id != "" ? var.kms_key_id : "alias/aws/secretsmanager"
 }
 
@@ -50,12 +53,12 @@ data "aws_iam_policy_document" "this" {
     ]
 
     resources = [
-      local.kms_key_id
+      local.kms_key_arn
     ]
 
     condition {
       test     = "StringEquals"
-      values   = [format("secretsmanager.%s.amazonaws.com", data.aws_region.this.name)]
+      values   = [format("secretsmanager.%s.amazonaws.com", join("", data.aws_region.this.*.name))]
       variable = "kms:ViaService"
     }
   }
