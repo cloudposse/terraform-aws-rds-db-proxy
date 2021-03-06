@@ -67,11 +67,6 @@ variable "engine_version" {
   description = "Database engine version, depends on engine type"
 }
 
-variable "major_engine_version" {
-  type        = string
-  description = "Database MAJOR engine version, depends on engine type"
-}
-
 variable "instance_class" {
   type        = string
   description = "Class of RDS instance"

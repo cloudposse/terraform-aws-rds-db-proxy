@@ -1,7 +1,7 @@
 # https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.html
 
 locals {
-  iam_role_enabled = var.existing_iam_role_arn == mull || var.existing_iam_role_arn == "" ? true : false
+  iam_role_enabled = var.existing_iam_role_arn == null || var.existing_iam_role_arn == "" ? true : false
   asm_secret_arns  = compact([for auth in var.auth : lookup(auth, "secret_arn", "")])
   kms_key_id       = data.aws_kms_key.this.id
 }
