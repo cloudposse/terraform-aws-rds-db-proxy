@@ -12,7 +12,7 @@ data "aws_region" "this" {}
 # Get information about the KMS Key used to encrypt secrets in AWS Secrets Manager
 # If `kms_key_id` is not provided, use the AWS account's default CMK (the one named `aws/secretsmanager`)
 data "aws_kms_key" "this" {
-  key_id = var.kms_key_id != null && var.kms_key_id != "" ? var.kms_key_id : "aws/secretsmanager"
+  key_id = var.kms_key_id != null && var.kms_key_id != "" ? var.kms_key_id : "alias/aws/secretsmanager"
 }
 
 data "aws_iam_policy_document" "assume_role" {
@@ -49,7 +49,9 @@ data "aws_iam_policy_document" "this" {
       "kms:Decrypt"
     ]
 
-    resources = local.kms_key_id
+    resources = [
+      local.kms_key_id
+    ]
 
     condition {
       test     = "StringEquals"
