@@ -59,6 +59,6 @@ output "proxy_default_target_group_name" {
 }
 
 output "proxy_iam_role_arn" {
-  value       = aws_iam_role.this.arn
+  value       = var.existing_iam_role_arn == mull || var.existing_iam_role_arn == "" ? join("", aws_iam_role.this.*.arn) : var.existing_iam_role_arn
   description = "The ARN of the IAM role that the proxy uses to access secrets in AWS Secrets Manager"
 }
