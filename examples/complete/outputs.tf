@@ -1,3 +1,15 @@
+output "public_subnet_cidrs" {
+  value = module.subnets.public_subnet_cidrs
+}
+
+output "private_subnet_cidrs" {
+  value = module.subnets.private_subnet_cidrs
+}
+
+output "vpc_cidr" {
+  value = module.vpc.vpc_cidr_block
+}
+
 output "instance_id" {
   value       = module.rds_instance.instance_id
   description = "ID of the instance"
@@ -36,16 +48,4 @@ output "option_group_id" {
 output "hostname" {
   value       = module.rds_instance.hostname
   description = "DNS host name of the instance"
-}
-
-output "public_subnet_cidrs" {
-  value = module.subnets.public_subnet_cidrs
-}
-
-output "private_subnet_cidrs" {
-  value = module.subnets.private_subnet_cidrs
-}
-
-output "vpc_cidr" {
-  value = module.vpc.vpc_cidr_block
 }
