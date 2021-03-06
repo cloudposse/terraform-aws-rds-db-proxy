@@ -101,6 +101,114 @@ For automated tests of the complete example using [bats](https://github.com/bats
 (which tests and deploys the example on AWS), see [test](test).
 
 ```hcl
+module "vpc" {
+  source  = "cloudposse/vpc/aws"
+  version = "0.21.1"
+
+  cidr_block = "172.16.0.0/16"
+
+  context = module.this.context
+}
+
+module "subnets" {
+  source  = "cloudposse/dynamic-subnets/aws"
+  version = "0.38.0"
+
+  availability_zones   = var.availability_zones
+  vpc_id               = module.vpc.vpc_id
+  igw_id               = module.vpc.igw_id
+  cidr_block           = module.vpc.vpc_cidr_block
+  nat_gateway_enabled  = false
+  nat_instance_enabled = false
+
+  context = module.this.context
+}
+
+resource "random_password" "admin_password" {
+count  = var.database_password == "" || var.database_password == null ? 1 : 0
+  length           = 33
+  special          = false
+  override_special = "!#$%^&*()<>-_"
+}
+
+locals {
+  database_password = var.database_password != "" && var.database_password != null ? var.database_password : join("", random_password.admin_password.*.result)
+
+  username_password = {
+    username = var.database_user
+    password = local.database_password
+  }
+
+  auth = [
+    {
+      auth_scheme = "SECRETS"
+      description = "Access the database instance using username and password from AWS Secrets Manager"
+      iam_auth    = "DISABLED"
+      secret_arn  = aws_secretsmanager_secret.rds_username_and_password.arn
+    }
+  ]
+}
+
+module "rds_instance" {
+  source  = "cloudposse/rds/aws"
+  version = "0.34.0"
+
+  database_name       = var.database_name
+  database_user       = var.database_user
+  database_password   = local.database_password
+  database_port       = var.database_port
+  multi_az            = var.multi_az
+  storage_type        = var.storage_type
+  allocated_storage   = var.allocated_storage
+  storage_encrypted   = var.storage_encrypted
+  engine              = var.engine
+  engine_version      = var.engine_version
+  instance_class      = var.instance_class
+  db_parameter_group  = var.db_parameter_group
+  publicly_accessible = var.publicly_accessible
+  vpc_id              = module.vpc.vpc_id
+  subnet_ids          = module.subnets.private_subnet_ids
+  security_group_ids  = [module.vpc.vpc_default_security_group_id]
+  apply_immediately   = var.apply_immediately
+
+  context = module.this.context
+}
+
+resource "aws_secretsmanager_secret" "rds_username_and_password" {
+  name                    = module.this.id
+  description             = "RDS username and password"
+  recovery_window_in_days = 0
+  tags                    = module.this.tags
+}
+
+resource "aws_secretsmanager_secret_version" "rds_username_and_password" {
+  secret_id     = aws_secretsmanager_secret.rds_username_and_password.id
+  secret_string = jsonencode(local.username_password)
+}
+
+module "rds_proxy" {
+  source  = "cloudposse/rds-db-proxy/aws"
+  version = "0.1.0"
+
+  db_instance_identifier = module.rds_instance.instance_id
+  auth                   = local.auth
+  vpc_security_group_ids = [module.vpc.vpc_default_security_group_id]
+  vpc_subnet_ids         = module.subnets.public_subnet_ids
+
+  debug_logging                = var.debug_logging
+  engine_family                = var.engine_family
+  idle_client_timeout          = var.idle_client_timeout
+  require_tls                  = var.require_tls
+  connection_borrow_timeout    = var.connection_borrow_timeout
+  init_query                   = var.init_query
+  max_connections_percent      = var.max_connections_percent
+  max_idle_connections_percent = var.max_idle_connections_percent
+  session_pinning_filters      = var.session_pinning_filters
+  existing_iam_role_arn        = var.existing_iam_role_arn
+
+  context = module.this.context
+}
+
 ```
 
 
@@ -174,6 +282,7 @@ Available targets:
 | enabled | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
 | engine\_family | The kinds of databases that the proxy can connect to. This value determines which database network protocol the proxy recognizes when it interprets network traffic to and from the database. The engine family applies to MySQL and PostgreSQL for both RDS and Aurora. Valid values are MYSQL and POSTGRESQL | `string` | `"MYSQL"` | no |
 | environment | Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
+| existing\_iam\_role\_arn | The ARN of an existing IAM role that the proxy can use to access secrets in AWS Secrets Manager. If not provided, the module will create a role to access secrets in Secrets Manager | `string` | `null` | no |
 | iam\_role\_attributes | Additional attributes to add to the ID of the IAM role that the proxy uses to access secrets in AWS Secrets Manager | `list(string)` | `null` | no |
 | id\_length\_limit | Limit `id` to this many characters (minimum 6).<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
 | idle\_client\_timeout | The number of seconds that a connection to the proxy can be inactive before the proxy disconnects it | `number` | `1800` | no |

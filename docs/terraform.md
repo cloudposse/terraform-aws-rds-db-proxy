@@ -48,6 +48,7 @@
 | enabled | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
 | engine\_family | The kinds of databases that the proxy can connect to. This value determines which database network protocol the proxy recognizes when it interprets network traffic to and from the database. The engine family applies to MySQL and PostgreSQL for both RDS and Aurora. Valid values are MYSQL and POSTGRESQL | `string` | `"MYSQL"` | no |
 | environment | Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
+| existing\_iam\_role\_arn | The ARN of an existing IAM role that the proxy can use to access secrets in AWS Secrets Manager. If not provided, the module will create a role to access secrets in Secrets Manager | `string` | `null` | no |
 | iam\_role\_attributes | Additional attributes to add to the ID of the IAM role that the proxy uses to access secrets in AWS Secrets Manager | `list(string)` | `null` | no |
 | id\_length\_limit | Limit `id` to this many characters (minimum 6).<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
 | idle\_client\_timeout | The number of seconds that a connection to the proxy can be inactive before the proxy disconnects it | `number` | `1800` | no |

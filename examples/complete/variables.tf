@@ -154,3 +154,9 @@ variable "iam_role_attributes" {
   default     = null
   description = "Additional attributes to add to the ID of the IAM role that the proxy uses to access secrets in AWS Secrets Manager"
 }
+
+variable "existing_iam_role_arn" {
+  type        = string
+  default     = null
+  description = "The ARN of an existing IAM role that the proxy can use to access secrets in AWS Secrets Manager. If not provided, the module will create a role to access secrets in Secrets Manager"
+}

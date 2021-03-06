@@ -45,7 +45,7 @@ locals {
   auth = [
     {
       auth_scheme = "SECRETS"
-      description = "Access the database instance using username and password from Amazon Secrets Manager"
+      description = "Access the database instance using username and password from AWS Secrets Manager"
       iam_auth    = "DISABLED"
       secret_arn  = aws_secretsmanager_secret.rds_username_and_password.arn
     }
@@ -106,6 +106,7 @@ module "rds_proxy" {
   max_connections_percent      = var.max_connections_percent
   max_idle_connections_percent = var.max_idle_connections_percent
   session_pinning_filters      = var.session_pinning_filters
+  existing_iam_role_arn        = var.existing_iam_role_arn
 
   context = module.this.context
 }
