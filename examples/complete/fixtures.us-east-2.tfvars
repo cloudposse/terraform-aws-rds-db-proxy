@@ -16,6 +16,8 @@ database_name = "test_db"
 
 database_user = "admin_user"
 
+database_password = "admin_password"
+
 database_port = 5432
 
 multi_az = false

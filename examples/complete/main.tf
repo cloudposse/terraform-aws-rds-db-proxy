@@ -2,29 +2,6 @@ provider "aws" {
   region = var.region
 }
 
-module "vpc" {
-  source  = "cloudposse/vpc/aws"
-  version = "0.21.1"
-
-  cidr_block = "172.16.0.0/16"
-
-  context = module.this.context
-}
-
-module "subnets" {
-  source  = "cloudposse/dynamic-subnets/aws"
-  version = "0.38.0"
-
-  availability_zones   = var.availability_zones
-  vpc_id               = module.vpc.vpc_id
-  igw_id               = module.vpc.igw_id
-  cidr_block           = module.vpc.vpc_cidr_block
-  nat_gateway_enabled  = false
-  nat_instance_enabled = false
-
-  context = module.this.context
-}
-
 resource "random_password" "admin_password" {
   count  = var.database_password == "" || var.database_password == null ? 1 : 0
   length = 33
@@ -50,6 +27,8 @@ locals {
       secret_arn  = aws_secretsmanager_secret.rds_username_and_password.arn
     }
   ]
+
+  security_group_id = aws_security_group.this.id
 }
 
 module "rds_instance" {
@@ -71,7 +50,7 @@ module "rds_instance" {
   publicly_accessible = var.publicly_accessible
   vpc_id              = module.vpc.vpc_id
   subnet_ids          = module.subnets.private_subnet_ids
-  security_group_ids  = [module.vpc.vpc_default_security_group_id]
+  security_group_ids  = [local.security_group_id]
   apply_immediately   = var.apply_immediately
 
   context = module.this.context
@@ -94,7 +73,7 @@ module "rds_proxy" {
 
   db_instance_identifier = module.rds_instance.instance_id
   auth                   = local.auth
-  vpc_security_group_ids = [module.vpc.vpc_default_security_group_id]
+  vpc_security_group_ids = [local.security_group_id]
   vpc_subnet_ids         = module.subnets.public_subnet_ids
 
   debug_logging                = var.debug_logging
