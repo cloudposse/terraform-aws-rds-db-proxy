@@ -64,22 +64,22 @@ func TestExamplesComplete(t *testing.T) {
 	// Run `terraform output` to get the value of an output variable
 	parameterGroupId := terraform.Output(t, terraformOptions, "parameter_group_id")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "eg-test-rds-proxy"+randId, parameterGroupId)
+	assert.Equal(t, "eg-test-rds-proxy-"+randId, parameterGroupId)
 
 	// Run `terraform output` to get the value of an output variable
 	subnetGroupId := terraform.Output(t, terraformOptions, "subnet_group_id")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "eg-test-rds-proxy"+randId, subnetGroupId)
+	assert.Equal(t, "eg-test-rds-proxy-"+randId, subnetGroupId)
 
 	// Run `terraform output` to get the value of an output variable
 	proxyId := terraform.Output(t, terraformOptions, "proxy_id")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "eg-test-rds-proxy"+randId, proxyId)
+	assert.Equal(t, "eg-test-rds-proxy-"+randId, proxyId)
 
 	// Run `terraform output` to get the value of an output variable
 	proxyEndpoint := terraform.Output(t, terraformOptions, "proxy_endpoint")
 	// Verify we're getting back the outputs we expect
-	assert.Contains(t, proxyEndpoint, "eg-test-rds-proxy"+randId)
+	assert.Contains(t, proxyEndpoint, "eg-test-rds-proxy-"+randId)
 
 	// Run `terraform output` to get the value of an output variable
 	proxyTargetEndpoint := terraform.Output(t, terraformOptions, "proxy_target_endpoint")
