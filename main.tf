@@ -45,5 +45,5 @@ resource "aws_db_proxy_target" "this" {
   db_instance_identifier = var.db_instance_identifier
   db_cluster_identifier  = var.db_cluster_identifier
   db_proxy_name          = aws_db_proxy.this.name
-  target_group_name      = aws_db_proxy_default_target_group.this.db_proxy_name
+  target_group_name      = aws_db_proxy_default_target_group.this.name
 }

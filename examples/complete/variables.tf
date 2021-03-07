@@ -117,7 +117,7 @@ variable "require_tls" {
 variable "connection_borrow_timeout" {
   type        = number
   default     = 120
-  description = "he number of seconds for a proxy to wait for a connection to become available in the connection pool. Only applies when the proxy has opened its maximum number of connections and all connections are busy with client sessions"
+  description = "The number of seconds for a proxy to wait for a connection to become available in the connection pool. Only applies when the proxy has opened its maximum number of connections and all connections are busy with client sessions"
 }
 
 variable "init_query" {
