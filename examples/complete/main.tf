@@ -28,7 +28,7 @@ locals {
     }
   ]
 
-  security_group_id = aws_security_group.this.id
+  security_group_id = module.vpc.vpc_default_security_group_id
 }
 
 module "rds_instance" {
@@ -49,7 +49,7 @@ module "rds_instance" {
   db_parameter_group  = var.db_parameter_group
   publicly_accessible = var.publicly_accessible
   vpc_id              = module.vpc.vpc_id
-  subnet_ids          = module.subnets.public_subnet_ids
+  subnet_ids          = module.subnets.private_subnet_ids
   security_group_ids  = [local.security_group_id]
   apply_immediately   = var.apply_immediately
 
@@ -74,7 +74,7 @@ module "rds_proxy" {
   db_instance_identifier = module.rds_instance.instance_id
   auth                   = local.auth
   vpc_security_group_ids = [local.security_group_id]
-  vpc_subnet_ids         = module.subnets.public_subnet_ids
+  vpc_subnet_ids         = module.subnets.private_subnet_ids
 
   debug_logging                = var.debug_logging
   engine_family                = var.engine_family
