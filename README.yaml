@@ -1,0 +1,188 @@
+name: terraform-aws-rds-db-proxy
+
+tags:
+  - aws
+  - terraform
+  - terraform-modules
+  - databases
+  - rds
+  - rds-database
+  - proxy
+  - proxy-pool
+  - database-proxy
+  - connection
+  - connections
+  - pool
+  - connection-pool
+  - aurora
+  - mysql
+  - postgres
+  - cluster
+
+categories:
+  - terraform-modules/databases
+
+license: APACHE2
+
+github_repo: cloudposse/terraform-aws-rds-db-proxy
+
+badges:
+  - name: Latest Release
+    image: https://img.shields.io/github/release/cloudposse/terraform-aws-rds-db-proxy.svg
+    url: https://github.com/cloudposse/terraform-aws-rds-db-proxy/releases/latest
+  - name: Slack Community
+    image: https://slack.cloudposse.com/badge.svg
+    url: https://slack.cloudposse.com
+
+related:
+  - name: terraform-aws-rds-cluster
+    description: Terraform module to provision an RDS Aurora cluster for MySQL or Postgres.
+    url: https://github.com/cloudposse/terraform-aws-rds-cluster
+  - name: terraform-aws-rds
+    description: Terraform module to provision AWS RDS instances.
+    url: https://github.com/cloudposse/terraform-aws-rds
+  - name: terraform-aws-rds-cloudwatch-sns-alarms
+    description: Terraform module that configures important RDS alerts using CloudWatch and sends them to an SNS topic.
+    url: https://github.com/cloudposse/terraform-aws-rds-cloudwatch-sns-alarms
+  - name: terraform-aws-rds-replica
+    description: Terraform module to provision AWS RDS replica instances. These are best suited for reporting purposes.
+    url: https://github.com/cloudposse/terraform-aws-rds-replica
+  - name: terraform-aws-backup
+    description: Terraform module to provision AWS Backup, a fully managed backup service that makes it easy to centralize and automate
+        the back up of data across AWS services such as Amazon EBS volumes, Amazon EC2 instances, Amazon RDS databases,
+        Amazon DynamoDB tables, Amazon EFS file systems, and AWS Storage Gateway volumes.
+    url: https://github.com/cloudposse/terraform-aws-backup
+
+description: |-
+  Terraform module to provision an Amazon [RDS Proxy](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.html) for MySQL or Postgres.
+
+usage: |2-
+
+  For a complete example, see [examples/complete](examples/complete).
+
+  For automated tests of the complete example using [bats](https://github.com/bats-core/bats-core) and [Terratest](https://github.com/gruntwork-io/terratest)
+  (which tests and deploys the example on AWS), see [test](test).
+
+  ```hcl
+  module "vpc" {
+    source  = "cloudposse/vpc/aws"
+    version = "0.21.1"
+
+    cidr_block = "172.16.0.0/16"
+
+    context = module.this.context
+  }
+
+  module "subnets" {
+    source  = "cloudposse/dynamic-subnets/aws"
+    version = "0.38.0"
+
+    availability_zones   = var.availability_zones
+    vpc_id               = module.vpc.vpc_id
+    igw_id               = module.vpc.igw_id
+    cidr_block           = module.vpc.vpc_cidr_block
+    nat_gateway_enabled  = false
+    nat_instance_enabled = false
+
+    context = module.this.context
+  }
+
+  resource "random_password" "admin_password" {
+  count  = var.database_password == "" || var.database_password == null ? 1 : 0
+    length           = 33
+    special          = false
+    override_special = "!#$%^&*()<>-_"
+  }
+
+  locals {
+    database_password = var.database_password != "" && var.database_password != null ? var.database_password : join("", random_password.admin_password.*.result)
+
+    username_password = {
+      username = var.database_user
+      password = local.database_password
+    }
+
+    auth = [
+      {
+        auth_scheme = "SECRETS"
+        description = "Access the database instance using username and password from AWS Secrets Manager"
+        iam_auth    = "DISABLED"
+        secret_arn  = aws_secretsmanager_secret.rds_username_and_password.arn
+      }
+    ]
+  }
+
+  module "rds_instance" {
+    source  = "cloudposse/rds/aws"
+    version = "0.34.0"
+
+    database_name       = var.database_name
+    database_user       = var.database_user
+    database_password   = local.database_password
+    database_port       = var.database_port
+    multi_az            = var.multi_az
+    storage_type        = var.storage_type
+    allocated_storage   = var.allocated_storage
+    storage_encrypted   = var.storage_encrypted
+    engine              = var.engine
+    engine_version      = var.engine_version
+    instance_class      = var.instance_class
+    db_parameter_group  = var.db_parameter_group
+    publicly_accessible = var.publicly_accessible
+    vpc_id              = module.vpc.vpc_id
+    subnet_ids          = module.subnets.private_subnet_ids
+    security_group_ids  = [module.vpc.vpc_default_security_group_id]
+    apply_immediately   = var.apply_immediately
+
+    context = module.this.context
+  }
+
+  resource "aws_secretsmanager_secret" "rds_username_and_password" {
+    name                    = module.this.id
+    description             = "RDS username and password"
+    recovery_window_in_days = 0
+    tags                    = module.this.tags
+  }
+
+  resource "aws_secretsmanager_secret_version" "rds_username_and_password" {
+    secret_id     = aws_secretsmanager_secret.rds_username_and_password.id
+    secret_string = jsonencode(local.username_password)
+  }
+
+  module "rds_proxy" {
+    source  = "cloudposse/rds-db-proxy/aws"
+    version = "0.1.0"
+
+    db_instance_identifier = module.rds_instance.instance_id
+    auth                   = local.auth
+    vpc_security_group_ids = [module.vpc.vpc_default_security_group_id]
+    vpc_subnet_ids         = module.subnets.public_subnet_ids
+
+    debug_logging                = var.debug_logging
+    engine_family                = var.engine_family
+    idle_client_timeout          = var.idle_client_timeout
+    require_tls                  = var.require_tls
+    connection_borrow_timeout    = var.connection_borrow_timeout
+    init_query                   = var.init_query
+    max_connections_percent      = var.max_connections_percent
+    max_idle_connections_percent = var.max_idle_connections_percent
+    session_pinning_filters      = var.session_pinning_filters
+    existing_iam_role_arn        = var.existing_iam_role_arn
+
+    context = module.this.context
+  }
+
+  ```
+
+examples: |-
+  Review the [complete example](examples/complete) to see how to use this module.
+
+include:
+  - docs/targets.md
+  - docs/terraform.md
+
+contributors:
+  - name: Erik Osterman
+    github: osterman
+  - name: Andriy Knysh
+    github: aknysh
