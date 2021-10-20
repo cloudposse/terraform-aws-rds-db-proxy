@@ -66,7 +66,7 @@ data "aws_iam_policy_document" "this" {
 
 module "role_label" {
   source  = "cloudposse/label/null"
-  version = "0.24.1"
+  version = "0.25.0"
 
   enabled    = local.iam_role_enabled
   attributes = var.iam_role_attributes
