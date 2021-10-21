@@ -1,4 +1,4 @@
- 
+
 <!-- markdownlint-disable -->
 # terraform-aws-rds-db-proxy [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-rds-db-proxy.svg)](https://github.com/cloudposse/terraform-aws-rds-db-proxy/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 <!-- markdownlint-restore -->
