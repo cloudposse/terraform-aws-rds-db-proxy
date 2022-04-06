@@ -187,7 +187,7 @@ resource "aws_secretsmanager_secret_version" "rds_username_and_password" {
 
 module "rds_proxy" {
   source  = "cloudposse/rds-db-proxy/aws"
-  version = "0.1.0"
+  version = "0.2.1"
 
   db_instance_identifier = module.rds_instance.instance_id
   auth                   = local.auth
@@ -415,7 +415,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2021 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2022 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 
