@@ -66,13 +66,13 @@ func TestExamplesComplete(t *testing.T) {
 
   // Run `terraform output` to get the value of an output variable
   optionGroupId := terraform.Output(t, terraformOptions, "option_group_id")
-  // Verify we're getting back the outputs we expect
-  assert.Equal(t, "eg-test-rds-proxy-"+randID, optionGroupId)
+  // We expect AWS to tack a uniquifier on to the end
+  assert.Contains(t, optionGroupId, "eg-test-rds-proxy-"+randID)
 
   // Run `terraform output` to get the value of an output variable
   parameterGroupId := terraform.Output(t, terraformOptions, "parameter_group_id")
-  // Verify we're getting back the outputs we expect
-  assert.Equal(t, "eg-test-rds-proxy-"+randID, parameterGroupId)
+  // We expect AWS to tack a uniquifier on to the end
+  assert.Contains(t, parameterGroupId, "eg-test-rds-proxy-"+randID)
 
   // Run `terraform output` to get the value of an output variable
   subnetGroupId := terraform.Output(t, terraformOptions, "subnet_group_id")
