@@ -1,7 +1,9 @@
 package test
 
 import (
+  "github.com/gruntwork-io/terratest/modules/random"
   "github.com/gruntwork-io/terratest/modules/terraform"
+  test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
   "github.com/stretchr/testify/assert"
   "os"
   "strings"
@@ -60,32 +62,32 @@ func TestExamplesComplete(t *testing.T) {
   // Run `terraform output` to get the value of an output variable
   instanceId := terraform.Output(t, terraformOptions, "instance_id")
   // Verify we're getting back the outputs we expect
-  assert.Equal(t, "eg-test-rds-proxy-"+randId, instanceId)
+  assert.Equal(t, "eg-test-rds-proxy-"+randID, instanceId)
 
   // Run `terraform output` to get the value of an output variable
   optionGroupId := terraform.Output(t, terraformOptions, "option_group_id")
   // Verify we're getting back the outputs we expect
-  assert.Equal(t, "eg-test-rds-proxy-"+randId, optionGroupId)
+  assert.Equal(t, "eg-test-rds-proxy-"+randID, optionGroupId)
 
   // Run `terraform output` to get the value of an output variable
   parameterGroupId := terraform.Output(t, terraformOptions, "parameter_group_id")
   // Verify we're getting back the outputs we expect
-  assert.Equal(t, "eg-test-rds-proxy-"+randId, parameterGroupId)
+  assert.Equal(t, "eg-test-rds-proxy-"+randID, parameterGroupId)
 
   // Run `terraform output` to get the value of an output variable
   subnetGroupId := terraform.Output(t, terraformOptions, "subnet_group_id")
   // Verify we're getting back the outputs we expect
-  assert.Equal(t, "eg-test-rds-proxy-"+randId, subnetGroupId)
+  assert.Equal(t, "eg-test-rds-proxy-"+randID, subnetGroupId)
 
   // Run `terraform output` to get the value of an output variable
   proxyId := terraform.Output(t, terraformOptions, "proxy_id")
   // Verify we're getting back the outputs we expect
-  assert.Equal(t, "eg-test-rds-proxy-"+randId, proxyId)
+  assert.Equal(t, "eg-test-rds-proxy-"+randID, proxyId)
 
   // Run `terraform output` to get the value of an output variable
   proxyEndpoint := terraform.Output(t, terraformOptions, "proxy_endpoint")
   // Verify we're getting back the outputs we expect
-  assert.Contains(t, proxyEndpoint, "eg-test-rds-proxy-"+randId)
+  assert.Contains(t, proxyEndpoint, "eg-test-rds-proxy-"+randID)
 
   // Run `terraform output` to get the value of an output variable
   proxyTargetEndpoint := terraform.Output(t, terraformOptions, "proxy_target_endpoint")
