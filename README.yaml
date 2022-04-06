@@ -151,7 +151,7 @@ usage: |2-
 
   module "rds_proxy" {
     source  = "cloudposse/rds-db-proxy/aws"
-    version = "0.1.0"
+    version = "0.2.1"
 
     db_instance_identifier = module.rds_instance.instance_id
     auth                   = local.auth
