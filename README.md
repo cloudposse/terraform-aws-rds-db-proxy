@@ -187,8 +187,8 @@ resource "aws_secretsmanager_secret_version" "rds_username_and_password" {
 
 module "rds_proxy" {
   source  = "cloudposse/rds-db-proxy/aws"
-  version = "0.1.0"
-
+  # Cloud Posse recommends pinning every module to a specific version
+  # version = "x.x.x"
   db_instance_identifier = module.rds_instance.instance_id
   auth                   = local.auth
   vpc_security_group_ids = [module.vpc.vpc_default_security_group_id]
