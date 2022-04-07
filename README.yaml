@@ -151,8 +151,8 @@ usage: |2-
 
   module "rds_proxy" {
     source  = "cloudposse/rds-db-proxy/aws"
-    version = "0.2.1"
-
+    # Cloud Posse recommends pinning every module to a specific version
+    # version = "x.x.x"
     db_instance_identifier = module.rds_instance.instance_id
     auth                   = local.auth
     vpc_security_group_ids = [module.vpc.vpc_default_security_group_id]
