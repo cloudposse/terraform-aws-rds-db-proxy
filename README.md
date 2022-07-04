@@ -102,7 +102,8 @@ For automated tests of the complete example using [bats](https://github.com/bats
 ```hcl
 module "vpc" {
   source  = "cloudposse/vpc/aws"
-  version = "0.21.1"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version = "x.x.x"
 
   cidr_block = "172.16.0.0/16"
 
@@ -111,7 +112,8 @@ module "vpc" {
 
 module "subnets" {
   source  = "cloudposse/dynamic-subnets/aws"
-  version = "0.38.0"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version = "x.x.x"
 
   availability_zones   = var.availability_zones
   vpc_id               = module.vpc.vpc_id
@@ -124,7 +126,7 @@ module "subnets" {
 }
 
 resource "random_password" "admin_password" {
-count  = var.database_password == "" || var.database_password == null ? 1 : 0
+  count  = var.database_password == "" || var.database_password == null ? 1 : 0
   length           = 33
   special          = false
   override_special = "!#$%^&*()<>-_"
@@ -150,7 +152,8 @@ locals {
 
 module "rds_instance" {
   source  = "cloudposse/rds/aws"
-  version = "0.34.0"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version = "x.x.x"
 
   database_name       = var.database_name
   database_user       = var.database_user
@@ -207,7 +210,6 @@ module "rds_proxy" {
 
   context = module.this.context
 }
-
 ```
 
 
@@ -238,7 +240,6 @@ Available targets:
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.1.15 |
-| <a name="requirement_null"></a> [null](#requirement\_null) | >= 2.0 |
 
 ## Providers
 
@@ -476,14 +477,16 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 ### Contributors
 
 <!-- markdownlint-disable -->
-|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] |
-|---|---|
+|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![RB][nitrocode_avatar]][nitrocode_homepage]<br/>[RB][nitrocode_homepage] |
+|---|---|---|
 <!-- markdownlint-restore -->
 
   [osterman_homepage]: https://github.com/osterman
   [osterman_avatar]: https://img.cloudposse.com/150x150/https://github.com/osterman.png
   [aknysh_homepage]: https://github.com/aknysh
   [aknysh_avatar]: https://img.cloudposse.com/150x150/https://github.com/aknysh.png
+  [nitrocode_homepage]: https://github.com/nitrocode
+  [nitrocode_avatar]: https://img.cloudposse.com/150x150/https://github.com/nitrocode.png
 
 [![README Footer][readme_footer_img]][readme_footer_link]
 [![Beacon][beacon]][website]

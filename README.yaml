@@ -66,7 +66,8 @@ usage: |2-
   ```hcl
   module "vpc" {
     source  = "cloudposse/vpc/aws"
-    version = "0.21.1"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version = "x.x.x"
 
     cidr_block = "172.16.0.0/16"
 
@@ -75,7 +76,8 @@ usage: |2-
 
   module "subnets" {
     source  = "cloudposse/dynamic-subnets/aws"
-    version = "0.38.0"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version = "x.x.x"
 
     availability_zones   = var.availability_zones
     vpc_id               = module.vpc.vpc_id
@@ -88,7 +90,7 @@ usage: |2-
   }
 
   resource "random_password" "admin_password" {
-  count  = var.database_password == "" || var.database_password == null ? 1 : 0
+    count  = var.database_password == "" || var.database_password == null ? 1 : 0
     length           = 33
     special          = false
     override_special = "!#$%^&*()<>-_"
@@ -114,7 +116,8 @@ usage: |2-
 
   module "rds_instance" {
     source  = "cloudposse/rds/aws"
-    version = "0.34.0"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version = "x.x.x"
 
     database_name       = var.database_name
     database_user       = var.database_user
@@ -171,7 +174,6 @@ usage: |2-
 
     context = module.this.context
   }
-
   ```
 
 examples: |-
@@ -186,3 +188,5 @@ contributors:
     github: osterman
   - name: Andriy Knysh
     github: aknysh
+  - name: RB
+    github: nitrocode

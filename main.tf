@@ -1,4 +1,10 @@
+locals {
+  enabled = module.this.enabled
+}
+
 resource "aws_db_proxy" "this" {
+  count = local.enabled ? 1 : 0
+
   name                   = module.this.id
   debug_logging          = var.debug_logging
   engine_family          = var.engine_family
@@ -23,7 +29,9 @@ resource "aws_db_proxy" "this" {
 }
 
 resource "aws_db_proxy_default_target_group" "this" {
-  db_proxy_name = aws_db_proxy.this.name
+  count = local.enabled ? 1 : 0
+
+  db_proxy_name = join("", aws_db_proxy.this[*].name)
 
   dynamic "connection_pool_config" {
     for_each = (
@@ -42,8 +50,10 @@ resource "aws_db_proxy_default_target_group" "this" {
 }
 
 resource "aws_db_proxy_target" "this" {
+  count = local.enabled ? 1 : 0
+
   db_instance_identifier = var.db_instance_identifier
   db_cluster_identifier  = var.db_cluster_identifier
-  db_proxy_name          = aws_db_proxy.this.name
-  target_group_name      = aws_db_proxy_default_target_group.this.name
+  db_proxy_name          = join("", aws_db_proxy.this[*].name)
+  target_group_name      = join("", aws_db_proxy_default_target_group.this[*].name)
 }
