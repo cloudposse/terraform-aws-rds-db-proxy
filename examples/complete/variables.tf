@@ -159,7 +159,7 @@ variable "existing_iam_role_arn" {
 variable "proxy_create_timeout" {
   type        = string
   default     = "30m"
-  description = "Issues a timeout while proxy creation when specified value is reached"
+  description = "Proxy create timeout"
 }
 
 variable "proxy_update_timeout" {
