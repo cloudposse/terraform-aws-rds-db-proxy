@@ -26,7 +26,7 @@ resource "aws_db_proxy" "this" {
   }
 
   tags = module.this.tags
-  
+
   timeouts {
     create = var.proxy_create_timeout
     update = var.proxy_update_timeout
