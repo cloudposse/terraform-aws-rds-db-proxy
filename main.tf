@@ -63,3 +63,12 @@ resource "aws_db_proxy_target" "this" {
   db_proxy_name          = join("", aws_db_proxy.this[*].name)
   target_group_name      = join("", aws_db_proxy_default_target_group.this[*].name)
 }
+
+resource "aws_db_proxy_endpoint" "this" {
+  count = local.enabled ? 1 : 0
+  
+  db_proxy_name          = join("", aws_db_proxy.this[*].name)
+  db_proxy_endpoint_name = join("-", [join("", aws_db_proxy.this[*].name),"read-only"])
+  vpc_subnet_ids         = var.vpc_subnet_ids
+  target_role            = "READ_ONLY"
+}

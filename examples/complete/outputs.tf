@@ -114,3 +114,13 @@ output "proxy_iam_role_arn" {
   value       = module.rds_proxy.proxy_iam_role_arn
   description = "The ARN of the IAM role that the proxy uses to access secrets in AWS Secrets Manager"
 }
+
+output "proxy_read_endpoint_name" {
+  value       = module.rds_proxy.proxy_read_endpoint_name
+  description = "The read endpoint for the proxy"
+}
+
+output "proxy_read_endpoint_arn" {
+  value       = module.rds_proxy.proxy_read_endpoint_arn
+  description = "The read endpoint arn for the proxy"
+}
