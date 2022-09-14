@@ -25,6 +25,7 @@
 |------|------|
 | [aws_db_proxy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy) | resource |
 | [aws_db_proxy_default_target_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy_default_target_group) | resource |
+| [aws_db_proxy_endpoint.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy_endpoint) | resource |
 | [aws_db_proxy_target.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy_target) | resource |
 | [aws_iam_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
@@ -87,6 +88,8 @@
 | <a name="output_proxy_endpoint"></a> [proxy\_endpoint](#output\_proxy\_endpoint) | Proxy endpoint |
 | <a name="output_proxy_iam_role_arn"></a> [proxy\_iam\_role\_arn](#output\_proxy\_iam\_role\_arn) | The ARN of the IAM role that the proxy uses to access secrets in AWS Secrets Manager |
 | <a name="output_proxy_id"></a> [proxy\_id](#output\_proxy\_id) | Proxy ID |
+| <a name="output_proxy_read_endpoint_arn"></a> [proxy\_read\_endpoint\_arn](#output\_proxy\_read\_endpoint\_arn) | The read endpoint arn for the proxy |
+| <a name="output_proxy_read_endpoint_name"></a> [proxy\_read\_endpoint\_name](#output\_proxy\_read\_endpoint\_name) | The read endpoint for the proxy |
 | <a name="output_proxy_target_endpoint"></a> [proxy\_target\_endpoint](#output\_proxy\_target\_endpoint) | Hostname for the target RDS DB Instance. Only returned for `RDS_INSTANCE` type |
 | <a name="output_proxy_target_id"></a> [proxy\_target\_id](#output\_proxy\_target\_id) | Identifier of `db_proxy_name`, `target_group_name`, `target type` (e.g. `RDS_INSTANCE` or `TRACKED_CLUSTER`), and resource identifier separated by forward slashes (`/`) |
 | <a name="output_proxy_target_port"></a> [proxy\_target\_port](#output\_proxy\_target\_port) | Port for the target RDS DB instance or Aurora DB cluster |
