@@ -86,8 +86,10 @@ module "rds_proxy" {
   max_idle_connections_percent = var.max_idle_connections_percent
   session_pinning_filters      = var.session_pinning_filters
   existing_iam_role_arn        = var.existing_iam_role_arn
+  
   proxy_create_timeout         = var.proxy_create_timeout
   proxy_update_timeout         = var.proxy_update_timeout
   proxy_delete_timeout         = var.proxy_delete_timeout
+  
   context                      = module.this.context
 }
