@@ -89,5 +89,5 @@ module "rds_proxy" {
   proxy_create_timeout         = var.proxy_create_timeout
   proxy_update_timeout         = var.proxy_update_timeout
   proxy_delete_timeout         = var.proxy_delete_timeout
-  context = module.this.context
+  context                      = module.this.context
 }
