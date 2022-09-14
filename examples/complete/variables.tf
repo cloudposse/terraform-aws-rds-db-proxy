@@ -170,5 +170,5 @@ variable "proxy_update_timeout" {
 variable "proxy_delete_timeout" {
   type        = string
   default     = "60m"
-  description = "Issues a timeout while deleting proxy when specified value is reached"
+  description = "Proxy delete timeout"
 }
