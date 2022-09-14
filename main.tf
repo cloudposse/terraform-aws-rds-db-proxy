@@ -26,6 +26,11 @@ resource "aws_db_proxy" "this" {
   }
 
   tags = module.this.tags
+  timeouts {
+    create = var.proxy_create_timeout
+    update = var.proxy_update_timeout
+    delete = var.proxy_delete_timeout
+  }
 }
 
 resource "aws_db_proxy_default_target_group" "this" {

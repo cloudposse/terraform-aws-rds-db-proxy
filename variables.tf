@@ -101,3 +101,20 @@ variable "kms_key_id" {
   default     = null
   description = "The ARN or Id of the AWS KMS customer master key (CMK) to encrypt the secret values in the versions stored in secrets. If you don't specify this value, then Secrets Manager defaults to using the AWS account's default CMK (the one named `aws/secretsmanager`)"
 }
+
+variable "proxy_create_timeout" {
+  type        = string
+  default     = "30m"
+  description = "Issues a timeout while proxy creation when specified value is reached"
+}
+
+variable "proxy_update_timeout" {
+  type        = string
+  default     = "30m"
+  description = "Issues a timeout while updating proxy when specified value is reached"
+}
+variable "proxy_delete_timeout" {
+  type        = string
+  default     = "60m"
+  description = "Issues a timeout while deleting proxy when specified value is reached"
+}

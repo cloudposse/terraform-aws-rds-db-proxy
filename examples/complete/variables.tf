@@ -155,3 +155,20 @@ variable "existing_iam_role_arn" {
   default     = null
   description = "The ARN of an existing IAM role that the proxy can use to access secrets in AWS Secrets Manager. If not provided, the module will create a role to access secrets in Secrets Manager"
 }
+
+variable "proxy_create_timeout" {
+  type        = string
+  default     = "30m"
+  description = "Issues a timeout while proxy creation when specified value is reached"
+}
+
+variable "proxy_update_timeout" {
+  type        = string
+  default     = "30m"
+  description = "Issues a timeout while updating proxy when specified value is reached"
+}
+variable "proxy_delete_timeout" {
+  type        = string
+  default     = "60m"
+  description = "Issues a timeout while deleting proxy when specified value is reached"
+}
