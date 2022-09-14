@@ -105,7 +105,7 @@ variable "kms_key_id" {
 variable "proxy_create_timeout" {
   type        = string
   default     = "30m"
-  description = "Issues a timeout while proxy creation when specified value is reached"
+  description = "Proxy creation timeout"
 }
 
 variable "proxy_update_timeout" {
