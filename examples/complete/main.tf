@@ -12,7 +12,7 @@ resource "random_password" "admin_password" {
 }
 
 locals {
-  database_password = var.database_password != "" && var.database_password != null ? var.database_password : join("", random_password.admin_password.*.result)
+  database_password = var.database_password != "" && var.database_password != null ? var.database_password : join("", random_password.admin_password[*].result)
 
   username_password = {
     username = var.database_user

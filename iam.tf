@@ -3,8 +3,8 @@
 locals {
   iam_role_enabled = local.enabled && (var.existing_iam_role_arn == null || var.existing_iam_role_arn == "")
   asm_secret_arns  = compact([for auth in var.auth : lookup(auth, "secret_arn", "")])
-  kms_key_arn      = join("", data.aws_kms_key.this.*.arn)
-  iam_role_arn     = local.iam_role_enabled ? join("", aws_iam_role.this.*.arn) : var.existing_iam_role_arn
+  kms_key_arn      = join("", data.aws_kms_key.this[*].arn)
+  iam_role_arn     = local.iam_role_enabled ? join("", aws_iam_role.this[*].arn) : var.existing_iam_role_arn
 }
 
 data "aws_region" "this" {
@@ -58,7 +58,7 @@ data "aws_iam_policy_document" "this" {
 
     condition {
       test     = "StringEquals"
-      values   = [format("secretsmanager.%s.amazonaws.com", join("", data.aws_region.this.*.name))]
+      values   = [format("secretsmanager.%s.amazonaws.com", join("", data.aws_region.this[*].name))]
       variable = "kms:ViaService"
     }
   }
@@ -76,18 +76,18 @@ module "role_label" {
 resource "aws_iam_policy" "this" {
   count  = local.iam_role_enabled ? 1 : 0
   name   = module.role_label.id
-  policy = join("", data.aws_iam_policy_document.this.*.json)
+  policy = join("", data.aws_iam_policy_document.this[*].json)
 }
 
 resource "aws_iam_role" "this" {
   count              = local.iam_role_enabled ? 1 : 0
   name               = module.role_label.id
-  assume_role_policy = join("", data.aws_iam_policy_document.assume_role.*.json)
+  assume_role_policy = join("", data.aws_iam_policy_document.assume_role[*].json)
   tags               = module.role_label.tags
 }
 
 resource "aws_iam_role_policy_attachment" "this" {
   count      = local.iam_role_enabled ? 1 : 0
-  policy_arn = join("", aws_iam_policy.this.*.arn)
-  role       = join("", aws_iam_role.this.*.name)
+  policy_arn = join("", aws_iam_policy.this[*].arn)
+  role       = join("", aws_iam_role.this[*].name)
 }
