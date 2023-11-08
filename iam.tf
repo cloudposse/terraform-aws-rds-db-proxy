@@ -39,7 +39,8 @@ data "aws_iam_policy_document" "this" {
     sid = "AllowRdsToGetSecretValueFromSecretsManager"
 
     actions = [
-      "secretsmanager:GetSecretValue"
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret"
     ]
 
     resources = local.asm_secret_arns
