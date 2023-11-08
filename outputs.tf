@@ -62,3 +62,13 @@ output "proxy_iam_role_arn" {
   value       = local.iam_role_arn
   description = "The ARN of the IAM role that the proxy uses to access secrets in AWS Secrets Manager"
 }
+
+output "proxy_read_endpoint_name" {
+   value       = join("", aws_db_proxy_endpoint.this[*].endpoint)
+   description = "The read endpoint for the proxy"
+ }
+
+ output "proxy_read_endpoint_arn" {
+   value       = join("", aws_db_proxy_endpoint.this[*].arn)
+   description = "The read endpoint arn for the proxy"
+ } 
