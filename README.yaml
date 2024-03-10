@@ -28,12 +28,16 @@ github_repo: cloudposse/terraform-aws-rds-db-proxy
 
 badges:
   - name: Latest Release
-    image: https://img.shields.io/github/release/cloudposse/terraform-aws-rds-db-proxy.svg
+    image: https://img.shields.io/github/release/cloudposse/terraform-aws-rds-db-proxy.svg?style=for-the-badge
     url: https://github.com/cloudposse/terraform-aws-rds-db-proxy/releases/latest
+  - name: Last Updated
+    image: https://img.shields.io/github/last-commit/cloudposse/terraform-aws-rds-db-proxy.svg?style=for-the-badge
+    url: https://github.com/cloudposse/terraform-aws-rds-db-proxy/commits
   - name: Slack Community
-    image: https://slack.cloudposse.com/badge.svg
+    image: https://slack.cloudposse.com/for-the-badge.svg
     url: https://slack.cloudposse.com
 
+# List any related terraform modules that this module may be used with or that this module depends on.
 related:
   - name: terraform-aws-rds-cluster
     description: Terraform module to provision an RDS Aurora cluster for MySQL or Postgres.
@@ -48,9 +52,7 @@ related:
     description: Terraform module to provision AWS RDS replica instances. These are best suited for reporting purposes.
     url: https://github.com/cloudposse/terraform-aws-rds-replica
   - name: terraform-aws-backup
-    description: Terraform module to provision AWS Backup, a fully managed backup service that makes it easy to centralize and automate
-        the back up of data across AWS services such as Amazon EBS volumes, Amazon EC2 instances, Amazon RDS databases,
-        Amazon DynamoDB tables, Amazon EFS file systems, and AWS Storage Gateway volumes.
+    description: Terraform module to provision AWS Backup, a fully managed backup service that makes it easy to centralize and automate the back up of data across AWS services such as Amazon EBS volumes, Amazon EC2 instances, Amazon RDS databases, Amazon DynamoDB tables, Amazon EFS file systems, and AWS Storage Gateway volumes.
     url: https://github.com/cloudposse/terraform-aws-backup
 
 description: |-
@@ -183,10 +185,4 @@ include:
   - docs/targets.md
   - docs/terraform.md
 
-contributors:
-  - name: Erik Osterman
-    github: osterman
-  - name: Andriy Knysh
-    github: aknysh
-  - name: RB
-    github: nitrocode
+contributors: []
