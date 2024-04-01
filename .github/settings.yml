@@ -1,0 +1,7 @@
+# Upstream changes from _extends are only recognized when modifications are made to this file in the default branch.
+_extends: .github
+repository:
+  name: terraform-aws-rds-db-proxy
+  description: Terraform module to provision an Amazon RDS Proxy
+  homepage: https://cloudposse.com/accelerate
+  topics: terraform, terraform-module, terraform-aws, rds, proxy, proxypool, database, databases, proxysql
