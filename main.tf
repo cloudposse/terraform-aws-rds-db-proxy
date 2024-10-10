@@ -15,7 +15,7 @@ resource "aws_db_proxy" "this" {
   vpc_subnet_ids         = var.vpc_subnet_ids
 
   dynamic "auth" {
-    for_each = var.auth
+    for_each = toset(var.auth)
 
     content {
       auth_scheme = auth.value.auth_scheme
