@@ -38,9 +38,9 @@ apply_immediately = true
 # aws rds describe-db-engine-versions --query "DBEngineVersions[].DBParameterGroupFamily" --engine postgres --region=us-east-1
 engine = "postgres"
 
-engine_version = "12.8"
+engine_version = "16.10"
 
-db_parameter_group = "postgres12"
+db_parameter_group = "postgres16"
 
 # https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html
 instance_class = "db.t3.small"
