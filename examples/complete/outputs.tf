@@ -1,13 +1,16 @@
 output "public_subnet_cidrs" {
-  value = module.subnets.public_subnet_cidrs
+  value       = module.subnets.public_subnet_cidrs
+  description = "Public subnets cidrs"
 }
 
 output "private_subnet_cidrs" {
-  value = module.subnets.private_subnet_cidrs
+  value       = module.subnets.private_subnet_cidrs
+  description = "Private subnets cidrs"
 }
 
 output "vpc_cidr" {
-  value = module.vpc.vpc_cidr_block
+  value       = module.vpc.vpc_cidr_block
+  description = "VPC cidr"
 }
 
 output "instance_id" {

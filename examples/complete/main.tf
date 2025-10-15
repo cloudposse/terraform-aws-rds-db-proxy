@@ -33,7 +33,7 @@ locals {
 
 module "rds_instance" {
   source  = "cloudposse/rds/aws"
-  version = "0.38.4"
+  version = "1.1.2"
 
   database_name       = var.database_name
   database_user       = var.database_user
