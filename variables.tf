@@ -39,7 +39,21 @@ variable "auth" {
     iam_auth    = string
     secret_arn  = string
   }))
-  description = "Configuration blocks with authorization mechanisms to connect to the associated database instances or clusters"
+  description = <<EOF
+Configuration blocks with authorization mechanisms to connect to the associated database instances or clusters.
+
+Example:
+```
+auth = [
+  {
+    auth_scheme = "SECRETS"
+    description = "Access the database instance using username and password from AWS Secrets Manager"
+    iam_auth    = "DISABLED"
+    secret_arn  = aws_secretsmanager_secret.rds_username_and_password.arn
+  }
+]
+```
+EOF
 }
 
 variable "db_instance_identifier" {
