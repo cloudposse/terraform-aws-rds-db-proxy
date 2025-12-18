@@ -18,10 +18,12 @@ resource "aws_db_proxy" "this" {
     for_each = var.auth
 
     content {
-      auth_scheme = auth.value.auth_scheme
-      description = auth.value.description
-      iam_auth    = auth.value.iam_auth
-      secret_arn  = auth.value.secret_arn
+      auth_scheme               = auth.value.auth_scheme
+      client_password_auth_type = auth.value.client_password_auth_type
+      description               = auth.value.description
+      iam_auth                  = auth.value.iam_auth
+      secret_arn                = auth.value.secret_arn
+      username                  = auth.value.username
     }
   }
 

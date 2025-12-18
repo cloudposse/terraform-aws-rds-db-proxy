@@ -21,10 +21,11 @@ locals {
 
   auth = [
     {
-      auth_scheme = "SECRETS"
-      description = "Access the database instance using username and password from AWS Secrets Manager"
-      iam_auth    = "DISABLED"
-      secret_arn  = aws_secretsmanager_secret.rds_username_and_password.arn
+      auth_scheme               = "SECRETS"
+      client_password_auth_type = "MYSQL_NATIVE_PASSWORD"
+      description               = "Access the database instance using username and password from AWS Secrets Manager"
+      iam_auth                  = "DISABLED"
+      secret_arn                = aws_secretsmanager_secret.rds_username_and_password.arn
     }
   ]
 

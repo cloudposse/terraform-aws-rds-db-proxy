@@ -100,7 +100,7 @@ variable "debug_logging" {
 variable "engine_family" {
   type        = string
   default     = "MYSQL"
-  description = "The kinds of databases that the proxy can connect to. This value determines which database network protocol the proxy recognizes when it interprets network traffic to and from the database. The engine family applies to MySQL and PostgreSQL for both RDS and Aurora. Valid values are MYSQL and POSTGRESQL"
+  description = "The kinds of databases that the proxy can connect to. This value determines which database network protocol the proxy recognizes when it interprets network traffic to and from the database. Valid values are `MYSQL`, `POSTGRESQL`, and `SQLSERVER`"
 }
 
 variable "idle_client_timeout" {
