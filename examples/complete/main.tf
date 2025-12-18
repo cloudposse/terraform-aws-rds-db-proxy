@@ -19,12 +19,20 @@ locals {
     password = local.database_password
   }
 
+  # Map engine family to appropriate client password auth type
+  client_password_auth_type = {
+    MYSQL      = "MYSQL_NATIVE_PASSWORD"
+    POSTGRESQL = "POSTGRES_SCRAM_SHA_256"
+    SQLSERVER  = "SQL_SERVER_AUTHENTICATION"
+  }
+
   auth = [
     {
-      auth_scheme = "SECRETS"
-      description = "Access the database instance using username and password from AWS Secrets Manager"
-      iam_auth    = "DISABLED"
-      secret_arn  = aws_secretsmanager_secret.rds_username_and_password.arn
+      auth_scheme               = "SECRETS"
+      client_password_auth_type = local.client_password_auth_type[var.engine_family]
+      description               = "Access the database instance using username and password from AWS Secrets Manager"
+      iam_auth                  = "DISABLED"
+      secret_arn                = aws_secretsmanager_secret.rds_username_and_password.arn
     }
   ]
 

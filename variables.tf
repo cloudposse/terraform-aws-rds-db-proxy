@@ -7,7 +7,12 @@ variable "debug_logging" {
 variable "engine_family" {
   type        = string
   default     = "MYSQL"
-  description = "The kinds of databases that the proxy can connect to. This value determines which database network protocol the proxy recognizes when it interprets network traffic to and from the database. The engine family applies to MySQL and PostgreSQL for both RDS and Aurora. Valid values are MYSQL and POSTGRESQL"
+  description = "The kinds of databases that the proxy can connect to. This value determines which database network protocol the proxy recognizes when it interprets network traffic to and from the database. Valid values are `MYSQL`, `POSTGRESQL`, and `SQLSERVER`"
+
+  validation {
+    condition     = contains(["MYSQL", "POSTGRESQL", "SQLSERVER"], var.engine_family)
+    error_message = "Valid values for engine_family are MYSQL, POSTGRESQL, and SQLSERVER."
+  }
 }
 
 variable "idle_client_timeout" {
@@ -34,12 +39,22 @@ variable "vpc_subnet_ids" {
 
 variable "auth" {
   type = list(object({
-    auth_scheme = string
-    description = string
-    iam_auth    = string
-    secret_arn  = string
+    auth_scheme               = optional(string, "SECRETS")
+    client_password_auth_type = optional(string)
+    description               = optional(string)
+    iam_auth                  = optional(string, "DISABLED")
+    secret_arn                = optional(string)
+    username                  = optional(string)
   }))
-  description = "Configuration blocks with authorization mechanisms to connect to the associated database instances or clusters"
+  description = <<-EOT
+    Configuration blocks with authorization mechanisms to connect to the associated database instances or clusters.
+    - `auth_scheme` - The type of authentication that the proxy uses for connections from the proxy to the underlying database. Valid values are `SECRETS`.
+    - `client_password_auth_type` - The type of authentication the proxy uses for connections from clients. Valid values are `MYSQL_NATIVE_PASSWORD`, `POSTGRES_SCRAM_SHA_256`, `POSTGRES_MD5`, and `SQL_SERVER_AUTHENTICATION`.
+    - `description` - A user-specified description about the authentication used by a proxy to log in as a specific database user.
+    - `iam_auth` - Whether to require or disallow AWS Identity and Access Management (IAM) authentication for connections to the proxy. Valid values are `DISABLED`, `REQUIRED`.
+    - `secret_arn` - The Amazon Resource Name (ARN) representing the secret that the proxy uses to authenticate to the RDS DB instance or Aurora DB cluster.
+    - `username` - The name of the database user to which the proxy connects. Note: `username` must NOT be set when `auth_scheme` is `SECRETS`.
+  EOT
 }
 
 variable "db_instance_identifier" {
