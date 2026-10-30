@@ -58,7 +58,7 @@ data "aws_iam_policy_document" "this" {
 
     condition {
       test     = "StringEquals"
-      values   = [format("secretsmanager.%s.amazonaws.com", join("", data.aws_region.this.*.name))]
+      values   = [format("secretsmanager.%s.amazonaws.com", join("", data.aws_region.this[*].region))]
       variable = "kms:ViaService"
     }
   }
